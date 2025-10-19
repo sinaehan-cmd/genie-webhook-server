@@ -8,8 +8,7 @@ app = Flask(__name__)
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "7669613396:AAEqH2w9BSjjLoMjljzLaUINo1sPK-o6Yoc")
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 CHAT_ID = int(os.getenv("CHAT_ID", 7826229065))
-openai.api_key = os.getenv("OPENAI_API_KEY")  # ✅ 반드시 Render 환경변수에 등록
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 # ========== 기본 페이지 ==========
 @app.route('/')
 def home():
