@@ -10,7 +10,7 @@ LOG_FILE = "logs.json"
 
 # 🔹 텔레그램 설정 (환경변수에서 읽음)
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")   # 예: 123456789:ABC...
-CHAT_ID = os.environ.get("CHAT_ID")                 # 예: 987654321 (문자열 OK)
+CHAT_ID = os.environ.get("7669613396")                 # 예: 987654321 (문자열 OK)
 
 def send_telegram_message(text):
     if not TELEGRAM_TOKEN or not CHAT_ID:
