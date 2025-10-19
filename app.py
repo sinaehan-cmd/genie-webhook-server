@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import requests, os, threading, time
-import openai
+from openai import OpenAI
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 
@@ -8,7 +9,7 @@ app = Flask(__name__)
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 CHAT_ID = int(os.getenv("CHAT_ID", 0))
-openai.api_key = os.getenv("OPENAI_API_KEY")
+#openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # ✅ 첫 요청 전에 백그라운드 루프가 한 번만 실행되도록 제어용 변수
 background_started = False
