@@ -18,7 +18,11 @@ def webhook():
 def send_message(chat_id, text):
     url = f"{TELEGRAM_API_URL}/sendMessage"
     payload = {"chat_id": chat_id, "text": text}
-    requests.post(url, json=payload)
+    try:
+        res = requests.post(url, json=payload)
+        print("📤 Telegram API Response:", res.status_code, res.text)
+    except Exception as e:
+        print("❌ Error sending message:", e)
 
 @app.route('/send', methods=['POST'])
 def send_alert():
