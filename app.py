@@ -76,7 +76,9 @@ def background_task():
 
 @app.before_first_request
 def start_background_task():
-    threading.Thread(target=background_task, daemon=True).start()
+    if not hasattr(app, 'background_started'):
+        threading.Thread(target=background_task, daemon=True).start()
+        app.background_started = True  # 중복 실행 방지
 
 # ========== 실행 ==========
 if __name__ == '__main__':
