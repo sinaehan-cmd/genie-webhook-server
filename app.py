@@ -43,9 +43,11 @@ def send_alert():
     send_message(CHAT_ID, alert_msg)
     return jsonify({"ok": True, "sent": alert_msg}), 200
 
+from openai import OpenAI
+client = OpenAI()
 def ask_gpt(prompt):
     try:
-        res = openai.ChatCompletion.create(
+        res = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}]
         )
