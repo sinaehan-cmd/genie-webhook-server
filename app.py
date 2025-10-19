@@ -28,7 +28,7 @@ def send_message(chat_id, text):
 def send_alert():
     data = request.get_json()
     message = data.get("message", "📢 No message received.")
-    chat_id = 7669613396  # 네 텔레그램 chat_id
+    chat_id = 7826229065  # 네 텔레그램 chat_id
     send_message(chat_id, f"🎯 Genie Alert: {message}")
     return jsonify({"ok": True, "sent": message}), 200
 
