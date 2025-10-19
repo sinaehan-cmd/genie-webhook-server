@@ -1,22 +1,22 @@
 from flask import Flask, request, jsonify
-import requests, os
-from openai import OpenAI
-
-# ✅ OpenAI 클라이언트 생성 (이 방식만 지원됨)
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+import requests, os, openai
 
 app = Flask(__name__)
 
 # ✅ 환경 변수 불러오기
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 CHAT_ID = int(os.getenv("CHAT_ID", 0))
+TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
+
+# ✅ OpenAI API 키 설정 (1.2.4 구버전 방식)
+openai.api_key = OPENAI_API_KEY
 
 @app.route('/')
 def home():
-    return "🤖 Genie Webhook Server connected to Telegram + OpenAI (v1.3.7)"
+    return "🤖 Genie Telegram Webhook Server running with OpenAI v1.2.4"
 
-# ✅ 텔레그램 알림 전송 엔드포인트
+# ✅ 알림 전송 엔드포인트
 @app.route('/send', methods=['POST'])
 def send_alert():
     data = request.get_json()
@@ -32,24 +32,24 @@ def send_alert():
     send_message(CHAT_ID, alert_msg)
     return jsonify({"ok": True, "sent": alert_msg}), 200
 
-# ✅ GPT 호출 (새 SDK 문법)
+# ✅ GPT 요청 엔드포인트
 @app.route('/ask', methods=['POST'])
 def ask_gpt():
     data = request.get_json()
     prompt = data.get("prompt", "")
     try:
-        res = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # 1.2.4에서는 gpt-4o-mini 지원 X
             messages=[{"role": "user", "content": prompt}]
         )
-        answer = res.choices[0].message.content
+        answer = response.choices[0].message["content"]
         send_message(CHAT_ID, f"🧠 GPT 응답:\n{answer}")
         return jsonify({"ok": True, "answer": answer}), 200
     except Exception as e:
         print("❌ GPT Error:", e)
         return jsonify({"ok": False, "error": str(e)}), 500
 
-# ✅ 텔레그램 전송 함수
+# ✅ 텔레그램 메시지 전송
 def send_message(chat_id, text):
     url = f"{TELEGRAM_API_URL}/sendMessage"
     payload = {"chat_id": chat_id, "text": text}
